@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package com.facebook.scrumptious;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListAdapter;
@@ -54,9 +53,7 @@ public class FullListView extends ListView {
                     MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
             height += childView.getMeasuredHeight();
         }
-        Rect bgPadding = new Rect();
-        getBackground().getPadding(bgPadding);
-        height += (count - 1) * getDividerHeight() + bgPadding.top + bgPadding.bottom;
+        height += getDividerHeight() * (count-1);
         setMeasuredDimension(width, height);
     }
 }

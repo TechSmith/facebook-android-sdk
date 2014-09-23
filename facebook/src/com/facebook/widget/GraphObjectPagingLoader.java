@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.v4.content.Loader;
 import com.facebook.*;
+import com.facebook.internal.CacheableRequestBatch;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphObjectList;
-import com.facebook.internal.CacheableRequestBatch;
 
 class GraphObjectPagingLoader<T extends GraphObject> extends Loader<SimpleGraphObjectCursor<T>> {
     private final Class<T> graphObjectClass;
@@ -201,7 +201,11 @@ class GraphObjectPagingLoader<T extends GraphObject> extends Loader<SimpleGraphO
             nextRequest = response.getRequestForPagedResults(Response.PagingDirection.NEXT);
 
             cursorToModify.addGraphObjects(data, fromCache);
-            cursorToModify.setMoreObjectsAvailable(true);
+            if (nextRequest != null) {
+                cursorToModify.setMoreObjectsAvailable(true);
+            } else {
+                cursorToModify.setMoreObjectsAvailable(false);
+            }
         }
 
         if (!haveData) {

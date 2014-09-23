@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,6 +159,7 @@ public final class SharedPreferencesTokenCacheTests extends AndroidTestCase {
         TokenCachingStrategy.putSource(bundle, AccessTokenSource.FACEBOOK_APPLICATION_NATIVE);
         TokenCachingStrategy.putLastRefreshDate(bundle, earlier);
         TokenCachingStrategy.putPermissions(bundle, permissions);
+        TokenCachingStrategy.putDeclinedPermissions(bundle, Utility.arrayList("whatever"));
 
         cache.save(bundle);
         bundle = cache.load();

@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ package com.facebook.samples.switchuser;
 
 import android.content.Context;
 import android.os.Bundle;
-import com.facebook.*;
+import com.facebook.SessionLoginBehavior;
+import com.facebook.SharedPreferencesTokenCachingStrategy;
 import com.facebook.model.GraphUser;
 
 public class Slot {

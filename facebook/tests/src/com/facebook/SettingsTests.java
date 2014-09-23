@@ -1,5 +1,5 @@
 /**
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,16 @@
 package com.facebook;
 
 import android.os.ConditionVariable;
-import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
+import com.facebook.internal.ServerProtocol;
+import com.facebook.internal.Utility;
 
+import java.io.IOException;
 import java.util.concurrent.Executor;
 
-public final class SettingsTests extends AndroidTestCase {
+public final class SettingsTests extends FacebookTestCase {
 
     @SmallTest @MediumTest @LargeTest
     public void testGetExecutor() {
@@ -70,5 +72,52 @@ public final class SettingsTests extends AndroidTestCase {
         } finally {
             Settings.setExecutor(original);
         }
+    }
+
+    @SmallTest @MediumTest @LargeTest
+    public void testLogdException() {
+        try {
+            throw new IOException("Simulated error");
+        } catch (IOException e) {
+            Utility.logd("SettingsTest", e);
+        }
+
+        try {
+            throw new IOException((String)null);
+        } catch (IOException e) {
+            Utility.logd("SettingsTest", e);
+        }
+    }
+
+    @SmallTest @MediumTest @LargeTest
+    public void testFacebookDomain() {
+        Settings.setFacebookDomain("beta.facebook.com");
+
+        String graphUrlBase = ServerProtocol.getGraphUrlBase();
+        assertEquals("https://graph.beta.facebook.com", graphUrlBase);
+
+        Settings.setFacebookDomain("facebook.com");
+    }
+
+    @SmallTest @MediumTest @LargeTest
+    public void testLoadDefaults() {
+        Settings.setApplicationId(null);
+        Settings.setClientToken(null);
+
+        Settings.loadDefaultsFromMetadata(getActivity());
+
+        assertEquals("1234567890", Settings.getApplicationId());
+        assertEquals("abcdef123456", Settings.getClientToken());
+    }
+
+    @SmallTest @MediumTest @LargeTest
+    public void testLoadDefaultsDoesNotOverwrite() {
+        Settings.setApplicationId("hello");
+        Settings.setClientToken("world");
+
+        Settings.loadDefaultsFromMetadata(getActivity());
+
+        assertEquals("hello", Settings.getApplicationId());
+        assertEquals("world", Settings.getClientToken());
     }
 }
